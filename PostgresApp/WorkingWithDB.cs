@@ -23,38 +23,14 @@ namespace PostgresApp
         private string connectionString = $"Server={server};Port={port};User Id={serverUserId};Password={serverPassword};Database={databaseName};";
 
         private NpgsqlConnection connection;
-        private string query;
-        private DataTable dt;
-        private NpgsqlCommand cmd;
         public WorkingWithDB()
         {
             InitializeComponent();
         }
+
         private void WorkingWithDB_Load(object sender, EventArgs e)
         {
             connection = new NpgsqlConnection(connectionString);
-            Select();
-        }
-
-        private void Select()
-        {
-            try
-            {
-                connection.Open();
-                query = @"SELECT * FROM USERS";
-                cmd = new NpgsqlCommand(query, connection);
-                dt = new DataTable();
-                dt.Load(cmd.ExecuteReaderAsync().Result);
-                connection.Close();
-
-                dgvData.DataSource = null;
-                dgvData.DataSource = dt;
-            }
-            catch (Exception ex)
-            {
-                connection.Close();
-                MessageBox.Show($"Error: {ex.Message}");
-            }
         }
     }
 }
