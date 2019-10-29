@@ -77,6 +77,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IDataBasesService.cs" />
+    <Compile Include="PostgreSQLService.cs" />
     <Compile Include="WorkingWithDB.cs">
       <SubType>Form</SubType>
     </Compile>
