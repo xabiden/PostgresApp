@@ -29,9 +29,7 @@ namespace PostgresApp
         public DataTable Select(params EUSersColumnNames[] columnNames)
         {
             try
-            {
-                connection.Open();
-
+            {              
                 var comaSeparatedColumns = string.Join(",", columnNames);
 
                 query = $@"SELECT {comaSeparatedColumns} FROM USERS";
@@ -39,6 +37,8 @@ namespace PostgresApp
                 cmd = new NpgsqlCommand(query, connection);
 
                 dataTable = new DataTable();
+
+                connection.Open();
 
                 dataTable.Load(cmd.ExecuteReaderAsync().Result);
 
@@ -51,6 +51,31 @@ namespace PostgresApp
                 MessageBox.Show($"Error {ex.Message}"); //пока что так, раз логирования нет
                 connection.Close();
                 return null;
+            }
+        }
+
+        public void Insert( string domainName, string email, string telegramId)
+        {
+            try
+            {
+                query = $"INSERT INTO USERS ({EUSersColumnNames.domainName}, {EUSersColumnNames.email}, {EUSersColumnNames.telegramId}) " +
+                        $"VALUES ({domainName}, {email}, {telegramId})";
+
+                cmd = new NpgsqlCommand(query, connection);
+
+                connection.Open();
+
+                cmd.Parameters.AddWithValue("DOMAINNAME", domainName);
+                cmd.Parameters.AddWithValue("EMAIL", email);
+                cmd.Parameters.AddWithValue("TELEGRAMID", telegramId);
+                cmd.ExecuteNonQuery();
+
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error {ex.Message}");
+                connection.Close();
             }
         }
     }
